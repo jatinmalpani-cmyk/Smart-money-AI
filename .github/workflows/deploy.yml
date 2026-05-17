@@ -1,0 +1,23 @@
+name: Deploy to Netlify
+on:
+  repository_dispatch:
+    types: [ai_update]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Site Content
+        run: |
+          echo "${{ github.event.client_payload.code }}" > index.html
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add index.html
+          git commit -m "AI automated feature update"
+          git push
