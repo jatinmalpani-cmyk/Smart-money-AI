@@ -1,1 +1,655 @@
-404: Not Found
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Money AI Dashboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090b12;
+      --surface: #111827;
+      --surface-2: #1c2331;
+      --panel: #151b2b;
+      --text: #edf2f7;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #f97316;
+      --border: rgba(148, 163, 184, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: radial-gradient(circle at top, rgba(96, 165, 250, 0.16), transparent 28%),
+        linear-gradient(180deg, #05070d 0%, #0b1222 100%);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      padding: 0 16px 40px;
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .brand {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--success));
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: clamp(1.75rem, 2.4vw, 2.5rem);
+      line-height: 1.05;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .tagline {
+      max-width: 720px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--success));
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(96, 165, 250, 0.22);
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .card,
+    .panel {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 14px 16px;
+      color: var(--text);
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      color: #fff;
+      font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+      font-weight: 800;
+      margin: 12px 0 4px;
+    }
+
+    .metric-sub {
+      color: var(--muted);
+      font-size: 0.96rem;
+      margin: 0 0 20px;
+    }
+
+    .status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .tag.green {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+    }
+
+    .tag.yellow {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fde68a;
+    }
+
+    .tag.red {
+      background: rgba(249, 115, 22, 0.14);
+      color: #fdba74;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 620px;
+    }
+
+    th,
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    tbody tr:hover {
+      background: rgba(96, 165, 250, 0.08);
+    }
+
+    .small-text {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .chart {
+      background: linear-gradient(180deg, rgba(96, 165, 250, 0.08), transparent 90%);
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      border-radius: 24px;
+      padding: 20px;
+      margin-top: 18px;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      color: #cbd5e1;
+      text-align: center;
+    }
+
+    .chart strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #fff;
+      font-size: 1.05rem;
+    }
+
+    .market-card {
+      display: grid;
+      gap: 18px;
+    }
+
+    .market-meter {
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.12);
+      overflow: hidden;
+      height: 16px;
+      margin-top: 12px;
+    }
+
+    .market-meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .market-score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .market-score span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .market-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .market-label.green {
+      color: #6ee7b7;
+      background: rgba(16, 185, 129, 0.16);
+    }
+
+    .market-label.red {
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.16);
+    }
+
+    .grid-2 {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    @media (max-width: 980px) {
+      .grid-2,
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="header">
+      <div>
+        <div class="brand">
+          <span class="brand-dot"></span>
+          <div>
+            <h1 class="brand-title">Smart Money AI</h1>
+            <p class="tagline">A compact single-file finance dashboard with a clean dark-mode UI, portfolio allocation optimization, compound growth projection, and a Buffett-inspired value screener.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="button" onclick="document.getElementById('alloc').scrollIntoView({behavior:'smooth'})">Open Optimizer</button>
+      </div>
+    </section>
+
+    <section class="grid cards" style="margin-top: 28px;">
+      <article class="card" id="alloc">
+        <div class="card-header">
+          <div>
+            <h2>Portfolio Allocation Optimizer</h2>
+            <p>Generate a diversified allocation recommended for your capital, horizon, and risk preference.</p>
+          </div>
+        </div>
+
+        <label for="investment">Total investable capital</label>
+        <input id="investment" type="number" min="0" value="50000" />
+
+        <div class="input-row">
+          <div>
+            <label for="risk">Risk tolerance</label>
+            <select id="risk">
+              <option value="conservative">Conservative</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="growth">Growth</option>
+              <option value="aggressive">Aggressive</option>
+            </select>
+          </div>
+          <div>
+            <label for="timeframe">Investment horizon (years)</label>
+            <input id="timeframe" type="number" min="1" max="40" value="10" />
+          </div>
+        </div>
+
+        <div class="status-pills">
+          <span class="tag green">Equities</span>
+          <span class="tag yellow">Fixed Income</span>
+          <span class="tag red">Alternatives</span>
+        </div>
+
+        <button class="button" style="margin-top: 22px; width: 100%;" onclick="generateAllocation()">Calculate Allocation</button>
+
+        <div style="margin-top: 28px;">
+          <p class="metric" id="equitiesAmount">$0</p>
+          <p class="metric-sub">Equities allocation</p>
+          <p class="metric" id="bondsAmount">$0</p>
+          <p class="metric-sub">Fixed income & cash</p>
+          <p class="metric" id="altsAmount">$0</p>
+          <p class="metric-sub">Alternatives / crypto</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>Compound Growth Predictor</h2>
+            <p>Forecast portfolio growth from initial capital and monthly contributions.</p>
+          </div>
+        </div>
+
+        <label for="initial">Starting principal</label>
+        <input id="initial" type="number" min="0" value="10000" />
+
+        <label for="monthly">Monthly contribution</label>
+        <input id="monthly" type="number" min="0" value="500" />
+
+        <div class="input-row">
+          <div>
+            <label for="annualReturn">Expected annual return (%)</label>
+            <input id="annualReturn" type="number" min="0" max="25" step="0.1" value="8" />
+          </div>
+          <div>
+            <label for="years">Years invested</label>
+            <input id="years" type="number" min="1" max="50" value="15" />
+          </div>
+        </div>
+
+        <button class="button" style="margin-top: 22px; width: 100%;" onclick="calculateCompound()">Forecast Growth</button>
+
+        <div style="margin-top: 28px;">
+          <p class="metric" id="futureValue">$0</p>
+          <p class="metric-sub" id="totalInvested">Total invested: $0 · Compound gain: $0</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid grid-2" style="margin-top: 28px;">
+      <article class="panel">
+        <div class="card-header">
+          <div>
+            <h2>Warren Buffett Value Matrix Screener</h2>
+            <p>Evaluate quality businesses with ROE, leverage, and operating margin metrics.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>ROE</th>
+                <th>Debt/EBITDA</th>
+                <th>Op. Margin</th>
+                <th>Value Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Apple (AAPL)</td>
+                <td>34.9%</td>
+                <td>1.9x</td>
+                <td>26.7%</td>
+                <td><span class="tag green">Strong</span></td>
+              </tr>
+              <tr>
+                <td>Microsoft (MSFT)</td>
+                <td>41.2%</td>
+                <td>1.7x</td>
+                <td>42.6%</td>
+                <td><span class="tag green">Strong</span></td>
+              </tr>
+              <tr>
+                <td>Johnson & Johnson (JNJ)</td>
+                <td>22.5%</td>
+                <td>1.4x</td>
+                <td>28.9%</td>
+                <td><span class="tag yellow">Stable</span></td>
+              </tr>
+              <tr>
+                <td>Visa (V)</td>
+                <td>36.7%</td>
+                <td>0.7x</td>
+                <td>57.6%</td>
+                <td><span class="tag green">Strong</span></td>
+              </tr>
+              <tr>
+                <td>Procter & Gamble (PG)</td>
+                <td>24.4%</td>
+                <td>2.5x</td>
+                <td>23.8%</td>
+                <td><span class="tag yellow">Value</span></td>
+              </tr>
+              <tr>
+                <td>Intel (INTC)</td>
+                <td>15.2%</td>
+                <td>1.8x</td>
+                <td>22.0%</td>
+                <td><span class="tag red">Watch</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="card-header">
+          <div>
+            <h2>Quick Guidance</h2>
+            <p>Use quality factors to narrow your allocation with value discipline.</p>
+          </div>
+        </div>
+
+        <p class="small-text">• ROE above 20% is a strong signal that management is delivering profitable returns on equity.</p>
+        <p class="small-text">• Debt/EBITDA below 3.0 typically indicates a manageable leverage profile.</p>
+        <p class="small-text">• Operating margin above 20% often points to durable competitive advantages.</p>
+        <p class="small-text">• Compare the optimizer output with stock-level metrics to balance portfolio risk and quality.</p>
+
+        <div class="chart">
+          <strong>Buffett value investing checklist</strong>
+          <span>Quality businesses, limited leverage, excellent margins, and long-term compound growth.</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid cards" style="margin-top: 28px;">
+      <article class="card market-card">
+        <div class="card-header">
+          <div>
+            <h2>Fear & Greed Index</h2>
+            <p>Monitor market sentiment and risk appetite with a visual gauge.</p>
+          </div>
+        </div>
+
+        <div class="market-score">
+          <div>
+            <div id="fearGreedScore" style="font-size:2.2rem;">64</div>
+            <div class="metric-sub">Current sentiment score</div>
+          </div>
+          <span id="fearGreedLabel" class="market-label green">Greed</span>
+        </div>
+
+        <div class="market-meter">
+          <div id="fearGreedFill" class="market-meter-fill" style="width: 64%; background: linear-gradient(90deg, #10b981, #22c55e);"></div>
+        </div>
+
+        <div class="small-text">A higher score indicates stronger demand and bullish investor sentiment. Use this alongside volatility metrics for risk awareness.</div>
+      </article>
+
+      <article class="card market-card">
+        <div class="card-header">
+          <div>
+            <h2>VIX Volatility Tracker</h2>
+            <p>Track the CBOE Volatility Index and implied risk levels.</p>
+          </div>
+        </div>
+
+        <div class="market-score">
+          <div>
+            <div id="vixValue" style="font-size:2.2rem;">18.3</div>
+            <div class="metric-sub">VIX index level</div>
+          </div>
+          <span id="vixChange" class="market-label red">-1.4%</span>
+        </div>
+
+        <div class="market-meter">
+          <div class="market-meter-fill" style="width: 32%; background: linear-gradient(90deg, #ef4444, #f97316);"></div>
+        </div>
+
+        <div class="small-text">Implied volatility remains moderate. Rising values indicate market fear and potential trading opportunity.</div>
+      </article>
+    </section>
+
+    <section class="grid cards" style="margin-top: 28px;">
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>How to use the dashboard</h2>
+          </div>
+        </div>
+        <p class="small-text">1. Enter your investment capital and horizon to generate a diversified allocation.</p>
+        <p class="small-text">2. Forecast compound growth with your expected return and monthly contributions.</p>
+        <p class="small-text">3. Review stock metrics in the value matrix to identify high-quality candidates.</p>
+        <p class="small-text">4. Use the insights together: allocation strategy, growth projection, and value screening.</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const allocationProfiles = {
+      conservative: { equities: 0.4, bonds: 0.5, alts: 0.1 },
+      balanced: { equities: 0.55, bonds: 0.35, alts: 0.1 },
+      growth: { equities: 0.7, bonds: 0.2, alts: 0.1 },
+      aggressive: { equities: 0.8, bonds: 0.1, alts: 0.1 }
+    };
+
+    function formatMoney(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function generateAllocation() {
+      const capital = Number(document.getElementById('investment').value) || 0;
+      const profile = document.getElementById('risk').value;
+      const years = Number(document.getElementById('timeframe').value) || 1;
+      const target = allocationProfiles[profile] || allocationProfiles.balanced;
+      const horizonBoost = Math.min(1 + years / 30, 1.25);
+      const equities = Math.round(capital * target.equities * horizonBoost / (1 + 0.05 * (target.equities - 0.5)));
+      const bonds = Math.round(capital * target.bonds);
+      const alts = Math.max(0, Math.round(capital - equities - bonds));
+      document.getElementById('equitiesAmount').textContent = formatMoney(equities);
+      document.getElementById('bondsAmount').textContent = formatMoney(bonds);
+      document.getElementById('altsAmount').textContent = formatMoney(alts);
+    }
+
+    function calculateCompound() {
+      const principal = Number(document.getElementById('initial').value) || 0;
+      const contribution = Number(document.getElementById('monthly').value) || 0;
+      const annualRate = Number(document.getElementById('annualReturn').value) / 100 || 0;
+      const years = Number(document.getElementById('years').value) || 0;
+      const periods = years * 12;
+      const monthlyRate = annualRate / 12;
+      let futureValue = principal * Math.pow(1 + monthlyRate, periods);
+      for (let i = 1; i <= periods; i++) {
+        futureValue += contribution * Math.pow(1 + monthlyRate, periods - i);
+      }
+      const totalInvested = principal + contribution * periods;
+      const gain = futureValue - totalInvested;
+      document.getElementById('futureValue').textContent = formatMoney(Math.round(futureValue));
+      document.getElementById('totalInvested').textContent = `Total invested: ${formatMoney(totalInvested)} · Compound gain: ${formatMoney(Math.round(gain))}`;
+    }
+
+    function updateMarketSentiment() {
+      const fearGreed = { score: 64, label: 'Greed', color: 'green', width: '64%' };
+      const vix = { value: 18.3, change: '-1.4%', color: 'red', width: '32%' };
+
+      document.getElementById('fearGreedScore').textContent = fearGreed.score;
+      const fgLabel = document.getElementById('fearGreedLabel');
+      fgLabel.textContent = fearGreed.label;
+      fgLabel.className = `market-label ${fearGreed.color}`;
+      document.getElementById('fearGreedFill').style.width = fearGreed.width;
+
+      document.getElementById('vixValue').textContent = vix.value;
+      const vixChange = document.getElementById('vixChange');
+      vixChange.textContent = vix.change;
+      vixChange.className = `market-label ${vix.color}`;
+    }
+
+    generateAllocation();
+    calculateCompound();
+    updateMarketSentiment();
+  </script>
+</body>
+</html>
